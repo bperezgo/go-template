@@ -3,6 +3,8 @@ package server
 import (
 	"fmt"
 
+	"github.com/bperezgo/testing-ai/shared/platform/logger"
+	"github.com/bperezgo/testing-ai/shared/platform/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,8 +23,13 @@ type Server struct {
 func NewServer(handlers ...Handler) *Server {
 	r := gin.Default()
 
-	r.Use(gin.Logger())
+	l := logger.GetLogger()
+
+	loggingMiddleware := middlewares.NewLoggingMiddleware(l)
+
+	r.Use(loggingMiddleware.Handle)
 	r.Use(gin.Recovery())
+	r.Use()
 
 	for _, handler := range handlers {
 		r.GET(handler.GetPath(), handler.Function)
