@@ -4,10 +4,22 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+type LogHttpInput struct {
+	Request *struct {
+		Body   interface{}
+		Params interface{}
+		Query  interface{}
+	}
+	Response *struct {
+		Data interface{}
+	}
+}
+
 type LogInput struct {
 	Action  string
 	State   string
 	Message string
+	Http    *LogHttpInput
 }
 
 type Logger struct{}
