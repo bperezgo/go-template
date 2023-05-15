@@ -29,7 +29,6 @@ func NewServer(handlers ...Handler) *Server {
 
 	r.Use(loggingMiddleware.Handle)
 	r.Use(gin.Recovery())
-	r.Use()
 
 	for _, handler := range handlers {
 		r.GET(handler.GetPath(), handler.Function)
