@@ -1,6 +1,8 @@
 package middlewares
 
 import (
+	"io"
+
 	"github.com/bperezgo/testing-ai/shared/platform/logger"
 	"github.com/gin-gonic/gin"
 )
@@ -16,13 +18,51 @@ func NewLoggingMiddleware(logger *logger.Logger) *LoggingMiddleware {
 }
 
 func (m *LoggingMiddleware) Handle(c *gin.Context) {
+	b, err := io.ReadAll(c.Request.Body)
+	if err != nil {
+		m.logger.Info(logger.LogInput{
+			Action: "REQUEST",
+			State:  "FAILED",
+			Error: &logger.Error{
+				Message: err.Error(),
+			},
+		})
+	}
+
+	request := &struct {
+		Body   interface{}
+		Params interface{}
+		Query  interface{}
+	}{
+		Body:  string(b),
+		Query: c.Request.URL.Query(),
+	}
+
 	m.logger.Info(logger.LogInput{
 		Action: "REQUEST",
 		State:  "SUCCESS",
+		Http: &logger.LogHttpInput{
+			Request: request,
+		},
 	})
 	c.Next()
+	if err != nil {
+		m.logger.Info(logger.LogInput{
+			Action: "REQUEST",
+			State:  "FAILED",
+			Error: &logger.Error{
+				Message: err.Error(),
+			},
+		})
+	}
 	m.logger.Info(logger.LogInput{
 		Action: "RESPONSE",
 		State:  "SUCCESS",
+		Http: &logger.LogHttpInput{
+			Request: request,
+			Response: &struct{ Data interface{} }{
+				Data: "",
+			},
+		},
 	})
 }

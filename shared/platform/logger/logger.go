@@ -1,6 +1,8 @@
 package logger
 
 import (
+	"encoding/json"
+
 	"github.com/rs/zerolog/log"
 )
 
@@ -15,11 +17,16 @@ type LogHttpInput struct {
 	}
 }
 
+type Error struct {
+	Message string
+}
+
 type LogInput struct {
 	Action  string
 	State   string
 	Message string
 	Http    *LogHttpInput
+	Error   *Error
 }
 
 type Logger struct{}
@@ -39,18 +46,28 @@ func GetLogger() *Logger {
 
 func (Logger) Info(input LogInput) {
 	if e := log.Info(); e.Enabled() {
-		e.Str("action", input.Action).Str("action", input.State).Msg(input.Message)
+		b, err := json.Marshal(input.Http)
+		if err != nil {
+			e.Str("action", input.Action).Str("action", input.State).Msg(err.Error())
+			return
+		}
+		e.Str("action", input.Action).
+			Str("action", input.State).
+			RawJSON("http", b).
+			Msg(input.Message)
 	}
 }
 
 func (Logger) Error(input LogInput) {
 	if e := log.Error(); e.Enabled() {
 		e.Str("action", input.Action).Str("action", input.State).Msg(input.Message)
+		e.Any("http", input.Http)
 	}
 }
 
 func (Logger) Warn(input LogInput) {
 	if e := log.Warn(); e.Enabled() {
 		e.Str("action", input.Action).Str("action", input.State).Msg(input.Message)
+		e.Any("http", input.Http)
 	}
 }
