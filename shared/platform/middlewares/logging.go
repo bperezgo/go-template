@@ -3,7 +3,7 @@ package middlewares
 import (
 	"io"
 
-	"github.com/bperezgo/testing-ai/shared/platform/logger"
+	"github.com/bperezgo/go-template/shared/platform/logger"
 	"github.com/gin-gonic/gin"
 )
 

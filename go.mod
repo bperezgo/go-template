@@ -1,4 +1,4 @@
-module github.com/bperezgo/testing-ai
+module github.com/bperezgo/go-template
 
 go 1.20
 

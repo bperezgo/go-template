@@ -3,10 +3,10 @@ package bootstrap
 import (
 	"log"
 
-	"github.com/bperezgo/testing-ai/internal/platform/config"
-	"github.com/bperezgo/testing-ai/internal/platform/handlers"
-	"github.com/bperezgo/testing-ai/shared/platform/logger"
-	"github.com/bperezgo/testing-ai/shared/platform/server"
+	"github.com/bperezgo/go-template/internal/platform/config"
+	"github.com/bperezgo/go-template/internal/platform/handlers"
+	"github.com/bperezgo/go-template/shared/platform/logger"
+	"github.com/bperezgo/go-template/shared/platform/server"
 )
 
 func Run() error {

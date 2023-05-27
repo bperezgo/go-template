@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/bperezgo/testing-ai/cmd/bootstrap"
+	"github.com/bperezgo/go-template/cmd/bootstrap"
 )
 
 func main() {
