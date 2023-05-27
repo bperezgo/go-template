@@ -7,14 +7,14 @@ import (
 	"github.com/bperezgo/testing-ai/internal/platform/handlers"
 	"github.com/bperezgo/testing-ai/shared/platform/logger"
 	"github.com/bperezgo/testing-ai/shared/platform/server"
-	"github.com/joho/godotenv"
 )
 
 func Run() error {
-	err := godotenv.Load()
+	err := config.InitConfig()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal("Error loading .env file", err)
 	}
+
 	c := config.GetConfig()
 	logger.InitLogger()
 	allHandlers := handlers.GetHandlers()
