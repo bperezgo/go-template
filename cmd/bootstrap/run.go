@@ -12,7 +12,7 @@ import (
 func Run() error {
 	err := config.InitConfig()
 	if err != nil {
-		log.Fatal("Error loading .env file", err)
+		log.Fatal("error loading .env file", err)
 	}
 
 	c := config.GetConfig()
