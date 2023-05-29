@@ -1,12 +1,14 @@
 package handlers
 
 import (
-	"github.com/bperezgo/go-template/shared/platform/server"
+	"github.com/bperezgo/go-template/shared/platform/handler"
 )
 
-func GetHandlers() []server.Handler {
+func GetHandlers() []handler.Handler {
 	getHealth := NewGetHealthHandler()
-	return []server.Handler{
+	createVideos := NewCreateVideoHandler()
+	return []handler.Handler{
 		getHealth,
+		createVideos,
 	}
 }
