@@ -22,7 +22,7 @@ func InitConfig() error {
 		return godotenv.Load()
 	}
 
-	if environment == "debug" {
+	if environment == "local" {
 		cwd, err := os.Getwd()
 		if err != nil {
 			return err

@@ -25,6 +25,3 @@ COPY --from=builder /app/main /app/main
 
 # Run the web service on container startup.
 CMD ["/app/main"]
-
-# [END run_helloworld_dockerfile]
-# [END cloudrun_helloworld_dockerfile]
