@@ -3,27 +3,42 @@ package logger
 import (
 	"encoding/json"
 
+	"github.com/bperezgo/go-template/shared/platform/handler"
 	"github.com/rs/zerolog/log"
 )
 
 type LogHttpInput struct {
-	Request *struct {
-		Body   interface{}
-		Params interface{}
-		Query  interface{}
-	}
-	Response *struct {
-		Data interface{}
-	}
+	Request  handler.Request
+	Response handler.Response
 }
 
 type Error struct {
 	Message string
 }
 
+type LogState int64
+
+const (
+	SUCCESS LogState = iota
+	FAILED
+	PENDING
+)
+
+func (s LogState) String() string {
+	switch s {
+	case SUCCESS:
+		return "SUCCESS"
+	case FAILED:
+		return "FAILED"
+	case PENDING:
+		return "PENDING"
+	}
+	return "unknown"
+}
+
 type LogInput struct {
 	Action  string
-	State   string
+	State   LogState
 	Message string
 	Http    *LogHttpInput
 	Error   *Error
@@ -48,11 +63,11 @@ func (Logger) Info(input LogInput) {
 	if e := log.Info(); e.Enabled() {
 		b, err := json.Marshal(input.Http)
 		if err != nil {
-			e.Str("action", input.Action).Str("action", input.State).Msg(err.Error())
+			e.Str("action", input.Action).Str("state", input.State.String()).Msg(err.Error())
 			return
 		}
 		e.Str("action", input.Action).
-			Str("action", input.State).
+			Str("action", input.State.String()).
 			RawJSON("http", b).
 			Msg(input.Message)
 	}
@@ -60,14 +75,14 @@ func (Logger) Info(input LogInput) {
 
 func (Logger) Error(input LogInput) {
 	if e := log.Error(); e.Enabled() {
-		e.Str("action", input.Action).Str("action", input.State).Msg(input.Message)
+		e.Str("action", input.Action).Str("action", input.State.String()).Msg(input.Message)
 		e.Any("http", input.Http)
 	}
 }
 
 func (Logger) Warn(input LogInput) {
 	if e := log.Warn(); e.Enabled() {
-		e.Str("action", input.Action).Str("action", input.State).Msg(input.Message)
+		e.Str("action", input.Action).Str("action", input.State.String()).Msg(input.Message)
 		e.Any("http", input.Http)
 	}
 }

@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/bperezgo/go-template/shared/platform/handler"
-	"github.com/bperezgo/go-template/shared/platform/logger"
 	"github.com/bperezgo/go-template/shared/platform/middlewares"
 	"github.com/gin-gonic/gin"
 )
@@ -18,11 +17,6 @@ type Server struct {
 func NewServer(handlers ...handler.Handler) *Server {
 	r := gin.Default()
 
-	l := logger.GetLogger()
-
-	loggingMiddleware := middlewares.NewLoggingMiddleware(l)
-
-	r.Use(loggingMiddleware.Handle)
 	r.Use(gin.Recovery())
 
 	defineGinHandlers(r, handlers)
@@ -51,7 +45,8 @@ func defineGinHandlers(engine *gin.Engine, handlers []handler.Handler) {
 	mapMethods[handler.PUT] = engine.PUT
 	jsonHandler := handler.JsonHandler{}
 	for _, handler := range handlers {
-		ginHandler := jsonHandler.Adapt(handler)
+		loggerHandler := middlewares.NewLoggerHandler(handler)
+		ginHandler := jsonHandler.Adapt(loggerHandler)
 		mapMethods[handler.GetMethod()](handler.GetPath(), ginHandler)
 	}
 }

@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/bperezgo/go-template/shared/platform/handler"
@@ -36,10 +35,9 @@ func (h *CreateVideoHandler) GetPath() string {
 }
 
 func (h *CreateVideoHandler) Function(req handler.Request) handler.Response {
-	log.Println("request", req.Body)
 	h.logger.Info(logger.LogInput{
 		Action:  "createVideo",
-		State:   "SUCCESS",
+		State:   logger.SUCCESS,
 		Message: "Video created",
 	})
 	return handler.Response{

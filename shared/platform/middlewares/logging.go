@@ -1,58 +1,59 @@
 package middlewares
 
 import (
+	"github.com/bperezgo/go-template/shared/platform/handler"
 	"github.com/bperezgo/go-template/shared/platform/logger"
-	"github.com/gin-gonic/gin"
 )
 
-type LoggingMiddleware struct {
-	logger *logger.Logger
+type LoggerHandler struct {
+	handlerFunction handler.Function
+	handler         handler.Handler
 }
 
-func NewLoggingMiddleware(logger *logger.Logger) *LoggingMiddleware {
-	return &LoggingMiddleware{
-		logger: logger,
+func NewLoggerHandler(handler handler.Handler) *LoggerHandler {
+	return &LoggerHandler{
+		handlerFunction: decorateWithLogger(handler.Function, logger.GetLogger()),
+		handler:         handler,
 	}
 }
 
-func (m *LoggingMiddleware) Handle(c *gin.Context) {
-	// b, err := io.ReadAll(c.Request.Body)
-	// if err != nil {
-	// 	m.logger.Info(logger.LogInput{
-	// 		Action: "REQUEST",
-	// 		State:  "FAILED",
-	// 		Error: &logger.Error{
-	// 			Message: err.Error(),
-	// 		},
-	// 	})
-	// }
+func (h *LoggerHandler) GetMethod() handler.HandlerMethod {
+	return h.handler.GetMethod()
+}
 
-	request := &struct {
-		Body   interface{}
-		Params interface{}
-		Query  interface{}
-	}{
-		// Body:  string(b),
-		Query: c.Request.URL.Query(),
-	}
+func (h *LoggerHandler) GetPath() string {
+	return h.handler.GetPath()
+}
 
-	m.logger.Info(logger.LogInput{
-		Action: "REQUEST",
-		State:  "SUCCESS",
-		Http: &logger.LogHttpInput{
-			Request: request,
-		},
-	})
-	c.Next()
+func (h *LoggerHandler) Function(req handler.Request) handler.Response {
+	return h.handlerFunction(req)
+}
 
-	m.logger.Info(logger.LogInput{
-		Action: "RESPONSE",
-		State:  "SUCCESS",
-		Http: &logger.LogHttpInput{
-			Request: request,
-			Response: &struct{ Data interface{} }{
-				Data: "",
+func (h *LoggerHandler) GetEmptyRequest() handler.Request {
+	return h.handler.GetEmptyRequest()
+}
+
+func decorateWithLogger(handlerFunction handler.Function, l *logger.Logger) handler.Function {
+	return func(req handler.Request) (res handler.Response) {
+		l.Info(logger.LogInput{
+			Action: "REQUEST",
+			State:  logger.SUCCESS,
+			Http: &logger.LogHttpInput{
+				Request: req,
 			},
-		},
-	})
+		})
+
+		res = handlerFunction(req)
+
+		l.Info(logger.LogInput{
+			Action: "RESPONSE",
+			State:  logger.SUCCESS,
+			Http: &logger.LogHttpInput{
+				Request:  req,
+				Response: res,
+			},
+		})
+
+		return res
+	}
 }
