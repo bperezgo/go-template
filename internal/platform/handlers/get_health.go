@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/bperezgo/go-template/shared/platform/server"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,8 +13,8 @@ func NewGetHealthHandler() *GetHealthHandler {
 	return &GetHealthHandler{}
 }
 
-func (h *GetHealthHandler) GetMethod() string {
-	return "GET"
+func (h *GetHealthHandler) GetMethod() server.HandlerMethod {
+	return server.GET
 }
 
 func (h *GetHealthHandler) GetPath() string {
