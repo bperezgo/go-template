@@ -1,6 +1,7 @@
 FROM golang:1.20.4-alpine as builder
 
 ENV ENVIRONMENT=dev
+ENV SERVER_PORT=8080
 
 WORKDIR /app
 
@@ -27,6 +28,6 @@ RUN go build -v -o /app cmd/main.go
 
 # Run the web service on container startup.
 
-EXPOSE 3000
+EXPOSE $SERVER_PORT
 
 CMD ["/app/main"]
