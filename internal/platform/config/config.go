@@ -18,8 +18,6 @@ var config *Config
 func InitConfig() error {
 	environment, ok := os.LookupEnv("ENVIRONMENT")
 
-	log.Println("ENVIRONMENT: ", environment)
-
 	if !ok {
 		return godotenv.Load()
 	}
