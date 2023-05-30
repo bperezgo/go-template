@@ -44,9 +44,14 @@ func defineGinHandlers(engine *gin.Engine, handlers []handler.Handler) {
 	mapMethods[handler.PATCH] = engine.PATCH
 	mapMethods[handler.PUT] = engine.PUT
 	jsonHandler := handler.JsonHandler{}
+
 	for _, handler := range handlers {
-		loggerHandler := middlewares.NewLoggerHandler(handler)
-		ginHandler := jsonHandler.Adapt(loggerHandler)
+		loggerHandler := middlewares.NewLoggerMiddleware(handler)
+
+		metadataMiddleware := middlewares.NewMetadataMiddleware(loggerHandler)
+
+		ginHandler := jsonHandler.Adapt(metadataMiddleware)
+
 		mapMethods[handler.GetMethod()](handler.GetPath(), ginHandler)
 	}
 }

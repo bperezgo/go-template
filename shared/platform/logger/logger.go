@@ -42,6 +42,7 @@ type LogInput struct {
 	Message string
 	Http    *LogHttpInput
 	Error   *Error
+	Meta    *handler.Meta
 }
 
 type Logger struct{}
@@ -61,14 +62,21 @@ func GetLogger() *Logger {
 
 func (Logger) Info(input LogInput) {
 	if e := log.Info(); e.Enabled() {
-		b, err := json.Marshal(input.Http)
+		bHttp, err := json.Marshal(input.Http)
+		if err != nil {
+			e.Str("action", input.Action).Str("state", input.State.String()).Msg(err.Error())
+			return
+		}
+
+		bMeta, err := json.Marshal(input.Meta)
 		if err != nil {
 			e.Str("action", input.Action).Str("state", input.State.String()).Msg(err.Error())
 			return
 		}
 		e.Str("action", input.Action).
 			Str("action", input.State.String()).
-			RawJSON("http", b).
+			RawJSON("http", bHttp).
+			RawJSON("meta", bMeta).
 			Msg(input.Message)
 	}
 }

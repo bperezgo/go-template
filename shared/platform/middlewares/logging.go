@@ -5,55 +5,51 @@ import (
 	"github.com/bperezgo/go-template/shared/platform/logger"
 )
 
-type LoggerHandler struct {
-	handlerFunction handler.Function
-	handler         handler.Handler
+type LoggerMiddleware struct {
+	logger  *logger.Logger
+	handler handler.Handler
 }
 
-func NewLoggerHandler(handler handler.Handler) *LoggerHandler {
-	return &LoggerHandler{
-		handlerFunction: decorateWithLogger(handler.Function, logger.GetLogger()),
-		handler:         handler,
+func NewLoggerMiddleware(handler handler.Handler) *LoggerMiddleware {
+	return &LoggerMiddleware{
+		logger:  logger.GetLogger(),
+		handler: handler,
 	}
 }
 
-func (h *LoggerHandler) GetMethod() handler.HandlerMethod {
+func (h *LoggerMiddleware) GetMethod() handler.HandlerMethod {
 	return h.handler.GetMethod()
 }
 
-func (h *LoggerHandler) GetPath() string {
+func (h *LoggerMiddleware) GetPath() string {
 	return h.handler.GetPath()
 }
 
-func (h *LoggerHandler) Function(req handler.Request) handler.Response {
-	return h.handlerFunction(req)
+func (h *LoggerMiddleware) Function(req handler.Request) handler.Response {
+	h.logger.Info(logger.LogInput{
+		Action: "REQUEST",
+		State:  logger.SUCCESS,
+		Http: &logger.LogHttpInput{
+			Request: req,
+		},
+		Meta: req.Meta,
+	})
+
+	res := h.handler.Function(req)
+
+	h.logger.Info(logger.LogInput{
+		Action: "RESPONSE",
+		State:  logger.SUCCESS,
+		Http: &logger.LogHttpInput{
+			Request:  req,
+			Response: res,
+		},
+		Meta: req.Meta,
+	})
+
+	return res
 }
 
-func (h *LoggerHandler) GetEmptyRequest() handler.Request {
+func (h *LoggerMiddleware) GetEmptyRequest() handler.Request {
 	return h.handler.GetEmptyRequest()
-}
-
-func decorateWithLogger(handlerFunction handler.Function, l *logger.Logger) handler.Function {
-	return func(req handler.Request) (res handler.Response) {
-		l.Info(logger.LogInput{
-			Action: "REQUEST",
-			State:  logger.SUCCESS,
-			Http: &logger.LogHttpInput{
-				Request: req,
-			},
-		})
-
-		res = handlerFunction(req)
-
-		l.Info(logger.LogInput{
-			Action: "RESPONSE",
-			State:  logger.SUCCESS,
-			Http: &logger.LogHttpInput{
-				Request:  req,
-				Response: res,
-			},
-		})
-
-		return res
-	}
 }

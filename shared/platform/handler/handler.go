@@ -40,10 +40,15 @@ type Response struct {
 	HttpStatus int
 }
 
+type Meta struct {
+	RequestId string
+}
+
 type Request struct {
 	Body   interface{}
 	Query  interface{}
 	Params interface{}
+	Meta   *Meta
 }
 
 type Function func(req Request) (res Response)
