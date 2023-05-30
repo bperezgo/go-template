@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/bperezgo/go-template/shared/platform/handler"
-	"github.com/bperezgo/go-template/shared/platform/logger"
 )
 
 type CreateVideoResponse struct {
@@ -17,13 +16,10 @@ type CreateVideoRequest struct {
 }
 
 type CreateVideoHandler struct {
-	logger logger.Logger
 }
 
 func NewCreateVideoHandler() *CreateVideoHandler {
-	return &CreateVideoHandler{
-		logger: *logger.GetLogger(),
-	}
+	return &CreateVideoHandler{}
 }
 
 func (h *CreateVideoHandler) GetMethod() handler.HandlerMethod {
@@ -35,11 +31,6 @@ func (h *CreateVideoHandler) GetPath() string {
 }
 
 func (h *CreateVideoHandler) Function(req handler.Request) handler.Response {
-	h.logger.Info(logger.LogInput{
-		Action:  "createVideo",
-		State:   logger.SUCCESS,
-		Message: "Video created",
-	})
 	return handler.Response{
 		Body: CreateVideoResponse{
 			Message: "Video created",
