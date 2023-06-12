@@ -1,5 +1,7 @@
 package handler
 
+import "github.com/bperezgo/go-template/shared/platform/handlertypes"
+
 type HandlerMethod int64
 
 const (
@@ -35,33 +37,17 @@ func (s HandlerMethod) String() string {
 	return "unknown"
 }
 
-type Response struct {
-	Body       interface{}
-	HttpStatus int
-}
-
-type Meta struct {
-	RequestId string
-}
-
-type Request struct {
-	Body   interface{}
-	Query  interface{}
-	Params interface{}
-	Meta   *Meta
-}
-
-type Function func(req Request) (res Response)
+type Function func(req handlertypes.Request) (res handlertypes.Response)
 
 type Handler interface {
 	GetMethod() HandlerMethod
 	GetPath() string
-	Function(req Request) (res Response)
-	GetEmptyRequest() Request
+	Function(req handlertypes.Request) (res handlertypes.Response)
+	GetEmptyRequest() handlertypes.Request
 }
 
 type BaseHandler struct{}
 
-func (h *BaseHandler) GetEmptyRequest() Request {
-	return Request{}
+func (h *BaseHandler) GetEmptyRequest() handlertypes.Request {
+	return handlertypes.Request{}
 }

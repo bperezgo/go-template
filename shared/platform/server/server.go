@@ -43,7 +43,7 @@ func defineGinHandlers(engine *gin.Engine, handlers []handler.Handler) {
 	mapMethods[handler.OPTIONS] = engine.OPTIONS
 	mapMethods[handler.PATCH] = engine.PATCH
 	mapMethods[handler.PUT] = engine.PUT
-	jsonHandler := handler.JsonHandler{}
+	jsonHandler := handler.NewJsonHandler()
 
 	for _, handler := range handlers {
 		loggerHandler := middlewares.NewLoggerMiddleware(handler)

@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"github.com/bperezgo/go-template/shared/platform/handler"
+	"github.com/bperezgo/go-template/shared/platform/handlertypes"
 	"github.com/bperezgo/go-template/shared/platform/logger"
 )
 
@@ -25,7 +26,7 @@ func (h *LoggerMiddleware) GetPath() string {
 	return h.handler.GetPath()
 }
 
-func (h *LoggerMiddleware) Function(req handler.Request) handler.Response {
+func (h *LoggerMiddleware) Function(req handlertypes.Request) handlertypes.Response {
 	h.logger.Info(logger.LogInput{
 		Action: "REQUEST",
 		State:  logger.SUCCESS,
@@ -50,6 +51,6 @@ func (h *LoggerMiddleware) Function(req handler.Request) handler.Response {
 	return res
 }
 
-func (h *LoggerMiddleware) GetEmptyRequest() handler.Request {
+func (h *LoggerMiddleware) GetEmptyRequest() handlertypes.Request {
 	return h.handler.GetEmptyRequest()
 }

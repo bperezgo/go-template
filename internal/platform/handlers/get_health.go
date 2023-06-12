@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/bperezgo/go-template/shared/platform/handler"
+	"github.com/bperezgo/go-template/shared/platform/handlertypes"
 )
 
 type GetHealthResponse struct {
@@ -25,8 +26,8 @@ func (h *GetHealthHandler) GetPath() string {
 	return "/health"
 }
 
-func (h *GetHealthHandler) Function(req handler.Request) handler.Response {
-	return handler.Response{
+func (h *GetHealthHandler) Function(req handlertypes.Request) handlertypes.Response {
+	return handlertypes.Response{
 		Body: GetHealthResponse{
 			Message: "Server is up and running",
 		},
@@ -34,6 +35,6 @@ func (h *GetHealthHandler) Function(req handler.Request) handler.Response {
 	}
 }
 
-func (h *GetHealthHandler) GetEmptyRequest() handler.Request {
-	return handler.Request{}
+func (h *GetHealthHandler) GetEmptyRequest() handlertypes.Request {
+	return handlertypes.Request{}
 }

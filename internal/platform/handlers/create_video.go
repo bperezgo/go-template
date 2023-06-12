@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/bperezgo/go-template/shared/platform/handler"
+	"github.com/bperezgo/go-template/shared/platform/handlertypes"
 )
 
 type CreateVideoResponse struct {
@@ -30,8 +31,8 @@ func (h *CreateVideoHandler) GetPath() string {
 	return "/videos"
 }
 
-func (h *CreateVideoHandler) Function(req handler.Request) handler.Response {
-	return handler.Response{
+func (h *CreateVideoHandler) Function(req handlertypes.Request) handlertypes.Response {
+	return handlertypes.Response{
 		Body: CreateVideoResponse{
 			Message: "Video created",
 		},
@@ -39,8 +40,8 @@ func (h *CreateVideoHandler) Function(req handler.Request) handler.Response {
 	}
 }
 
-func (h *CreateVideoHandler) GetEmptyRequest() handler.Request {
-	return handler.Request{
+func (h *CreateVideoHandler) GetEmptyRequest() handlertypes.Request {
+	return handlertypes.Request{
 		Body: CreateVideoRequest{},
 	}
 }

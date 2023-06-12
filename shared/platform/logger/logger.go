@@ -3,13 +3,13 @@ package logger
 import (
 	"encoding/json"
 
-	"github.com/bperezgo/go-template/shared/platform/handler"
+	"github.com/bperezgo/go-template/shared/platform/handlertypes"
 	"github.com/rs/zerolog/log"
 )
 
 type LogHttpInput struct {
-	Request  handler.Request
-	Response handler.Response
+	Request  handlertypes.Request
+	Response handlertypes.Response
 }
 
 type Error struct {
@@ -42,7 +42,7 @@ type LogInput struct {
 	Message string
 	Http    *LogHttpInput
 	Error   *Error
-	Meta    *handler.Meta
+	Meta    *handlertypes.Meta
 }
 
 type Logger struct{}
@@ -83,7 +83,7 @@ func (Logger) Info(input LogInput) {
 
 func (Logger) Error(input LogInput) {
 	if e := log.Error(); e.Enabled() {
-		e.Str("action", input.Action).Str("action", input.State.String()).Msg(input.Message)
+		e.Str("action", input.Action).Str("action", input.State.String()).Str("error", input.Error.Message).Msg(input.Message)
 		e.Any("http", input.Http)
 	}
 }
