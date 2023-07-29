@@ -12,18 +12,18 @@ type GetHealthResponse struct {
 	handler.BaseHandler
 }
 
-type GetHealthHandler struct{}
+type GetHealthHandler struct {
+	handler.BasisHandler
+}
 
 func NewGetHealthHandler() *GetHealthHandler {
-	return &GetHealthHandler{}
-}
-
-func (h *GetHealthHandler) GetMethod() handler.HandlerMethod {
-	return handler.GET
-}
-
-func (h *GetHealthHandler) GetPath() string {
-	return "/health"
+	return &GetHealthHandler{
+		BasisHandler: handler.BasisHandler{
+			HandlerMethod: handler.GET,
+			Path:          "/health",
+			BasisBody:     nil,
+		},
+	}
 }
 
 func (h *GetHealthHandler) Function(req handlertypes.Request) handlertypes.Response {
@@ -33,8 +33,4 @@ func (h *GetHealthHandler) Function(req handlertypes.Request) handlertypes.Respo
 		},
 		HttpStatus: http.StatusOK,
 	}
-}
-
-func (h *GetHealthHandler) GetEmptyRequest() handlertypes.Request {
-	return handlertypes.Request{}
 }

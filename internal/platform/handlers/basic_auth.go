@@ -20,27 +20,25 @@ type BasicAuthResponse struct {
 
 type BasicAuthMiddleware struct {
 	userRepository ports.UserRepository
+	handler.BasisHandler
 }
 
 func NewBasicAuthMiddleware(userRepository ports.UserRepository) *BasicAuthMiddleware {
 	return &BasicAuthMiddleware{
 		userRepository: userRepository,
+		BasisHandler: handler.BasisHandler{
+			HandlerMethod: handler.POST,
+			Path:          "/auth",
+			BasisBody:     BasicAuthRequest{},
+		},
 	}
-}
-
-func (h *BasicAuthMiddleware) GetMethod() handler.HandlerMethod {
-	return handler.POST
-}
-
-func (h *BasicAuthMiddleware) GetPath() string {
-	return "/auth"
 }
 
 // This can be the middleware basic auth function
 func (h *BasicAuthMiddleware) Function(req handlertypes.Request) handlertypes.Response {
 	authentication := req.Headers.Authorization
 
-	authentication = authentication[6:]
+	authentication = authentication[6:] // After the word "Basic " (6 characters) comes the user and password encoded in base64
 
 	userAndPassword, err := base64.StdEncoding.DecodeString(authentication)
 	if err != nil {
@@ -68,11 +66,5 @@ func (h *BasicAuthMiddleware) Function(req handlertypes.Request) handlertypes.Re
 			Password: password,
 		},
 		HttpStatus: http.StatusOK,
-	}
-}
-
-func (h *BasicAuthMiddleware) GetEmptyRequest() handlertypes.Request {
-	return handlertypes.Request{
-		Body: BasicAuthRequest{},
 	}
 }

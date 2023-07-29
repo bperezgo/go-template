@@ -17,18 +17,17 @@ type CreateVideoRequest struct {
 }
 
 type CreateVideoHandler struct {
+	handler.BasisHandler
 }
 
 func NewCreateVideoHandler() *CreateVideoHandler {
-	return &CreateVideoHandler{}
-}
-
-func (h *CreateVideoHandler) GetMethod() handler.HandlerMethod {
-	return handler.POST
-}
-
-func (h *CreateVideoHandler) GetPath() string {
-	return "/videos"
+	return &CreateVideoHandler{
+		BasisHandler: handler.BasisHandler{
+			HandlerMethod: handler.POST,
+			Path:          "/videos",
+			BasisBody:     CreateVideoRequest{},
+		},
+	}
 }
 
 func (h *CreateVideoHandler) Function(req handlertypes.Request) handlertypes.Response {
@@ -37,11 +36,5 @@ func (h *CreateVideoHandler) Function(req handlertypes.Request) handlertypes.Res
 			Message: "Video created",
 		},
 		HttpStatus: http.StatusCreated,
-	}
-}
-
-func (h *CreateVideoHandler) GetEmptyRequest() handlertypes.Request {
-	return handlertypes.Request{
-		Body: CreateVideoRequest{},
 	}
 }
