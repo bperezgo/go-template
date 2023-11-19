@@ -29,7 +29,6 @@ func NewBasicAuthMiddleware(userRepository ports.UserRepository) *BasicAuthMiddl
 		BasisHandler: handler.BasisHandler{
 			HandlerMethod: handler.POST,
 			Path:          "/auth",
-			BasisBody:     BasicAuthRequest{},
 		},
 	}
 }

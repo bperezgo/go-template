@@ -1,11 +1,8 @@
 package handler
 
-import "github.com/bperezgo/go-template/shared/platform/handlertypes"
-
 type BasisHandler struct {
 	HandlerMethod HandlerMethod
 	Path          string
-	BasisBody     interface{}
 }
 
 func (h *BasisHandler) GetMethod() HandlerMethod {
@@ -14,10 +11,4 @@ func (h *BasisHandler) GetMethod() HandlerMethod {
 
 func (h *BasisHandler) GetPath() string {
 	return h.Path
-}
-
-func (h *BasisHandler) GetEmptyRequest() handlertypes.Request {
-	return handlertypes.Request{
-		Body: h.BasisBody,
-	}
 }

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/bperezgo/go-template/shared/platform/handler"
@@ -25,12 +26,19 @@ func NewCreateVideoHandler() *CreateVideoHandler {
 		BasisHandler: handler.BasisHandler{
 			HandlerMethod: handler.POST,
 			Path:          "/videos",
-			BasisBody:     CreateVideoRequest{},
 		},
 	}
 }
 
 func (h *CreateVideoHandler) Function(req handlertypes.Request) handlertypes.Response {
+	body := CreateVideoRequest{}
+	if err := json.Unmarshal(req.Body, &body); err != nil {
+		return handlertypes.Response{
+			Body:       nil,
+			HttpStatus: http.StatusBadRequest,
+		}
+	}
+
 	return handlertypes.Response{
 		Body: CreateVideoResponse{
 			Message: "Video created",

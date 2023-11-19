@@ -50,7 +50,3 @@ func (h *LoggerMiddleware) Function(req handlertypes.Request) handlertypes.Respo
 
 	return res
 }
-
-func (h *LoggerMiddleware) GetEmptyRequest() handlertypes.Request {
-	return h.handler.GetEmptyRequest()
-}

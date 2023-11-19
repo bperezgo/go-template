@@ -7,13 +7,13 @@ import (
 
 func GetHandlers() []handler.Handler {
 	getHealth := NewGetHealthHandler()
-	createVideos := NewCreateVideoHandler()
+	cvh := NewCreateVideoHandler()
 
 	userRepository := repositories.NewInMemoryUserRepository()
 	basicAuth := NewBasicAuthMiddleware(userRepository)
 	return []handler.Handler{
 		getHealth,
-		createVideos,
 		basicAuth,
+		cvh,
 	}
 }

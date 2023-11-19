@@ -21,7 +21,6 @@ func NewGetHealthHandler() *GetHealthHandler {
 		BasisHandler: handler.BasisHandler{
 			HandlerMethod: handler.GET,
 			Path:          "/health",
-			BasisBody:     nil,
 		},
 	}
 }

@@ -31,7 +31,3 @@ func (h *MetadataMiddleware) Function(req handlertypes.Request) handlertypes.Res
 
 	return h.handler.Function(req)
 }
-
-func (h *MetadataMiddleware) GetEmptyRequest() handlertypes.Request {
-	return h.handler.GetEmptyRequest()
-}

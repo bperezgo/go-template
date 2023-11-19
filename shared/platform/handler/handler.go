@@ -43,7 +43,6 @@ type Handler interface {
 	GetMethod() HandlerMethod
 	GetPath() string
 	Function(req handlertypes.Request) (res handlertypes.Response)
-	GetEmptyRequest() handlertypes.Request
 }
 
 type BaseHandler struct{}
